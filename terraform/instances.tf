@@ -32,6 +32,11 @@ resource "aws_db_subnet_group" "dbgroup" {
   }
 }
 
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+}
+
 #Creating pgsql aurora cluster on private subnet
 resource "aws_rds_cluster" "dbserver" {
   cluster_identifier           = "aheadcluster"
@@ -43,7 +48,7 @@ resource "aws_rds_cluster" "dbserver" {
   engine_version               = "10.14"
   kms_key_id                   = aws_kms_key.kms_key.arn
   master_username              = "ladberg"
-  master_password              = "star1234"
+  master_password              = random_password.password.result
   port                         = 5432
   preferred_backup_window      = "11:00-11:30"
   preferred_maintenance_window = "sat:04:00-sat:04:30"
